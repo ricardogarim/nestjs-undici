@@ -1,6 +1,6 @@
 {
   "name": "@ricardogarim/nestjs-undici",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NestJS HTTP module using Undici - a fast and reliable HTTP/1.1 client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
