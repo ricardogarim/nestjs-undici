@@ -29,7 +29,6 @@ coverage/
 
 # Misc
 *.tgz
-package-lock.json
 
 .bmad-core
 .claude

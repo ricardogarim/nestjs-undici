@@ -23,13 +23,14 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noForEach": "off"
+        "noForEach": "off",
+        "noStaticOnlyClass": "off"
       },
       "correctness": {
         "noUnusedVariables": "warn"
       },
       "style": {
-        "noNonNullAssertion": "warn",
+        "noNonNullAssertion": "off",
         "noParameterAssign": "error",
         "noUselessElse": "warn",
         "useConst": "error",
@@ -52,6 +53,9 @@
       "bracketSpacing": true,
       "bracketSameLine": false,
       "attributePosition": "auto"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   }
 }

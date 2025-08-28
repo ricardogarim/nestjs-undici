@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { HttpModule } from './http.module';
 import { HttpService } from './http.service';
-import { HttpModuleOptionsFactory } from './interfaces/http-module.interface';
+import type { HttpModuleOptionsFactory } from './interfaces/http-module.interface';
 
 describe('HttpModule', () => {
   describe('register', () => {
@@ -159,7 +159,7 @@ describe('HttpModule', () => {
 
       const httpService = module.get<HttpService>(HttpService);
       const extraService = module.get<ExtraService>(ExtraService);
-      
+
       expect(httpService).toBeDefined();
       expect(extraService).toBeDefined();
       expect(extraService.getData()).toBe('extra');
