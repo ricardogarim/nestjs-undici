@@ -1,0 +1,35 @@
+# Source files
+src/
+test/
+examples/
+benchmarks/
+scripts/
+
+# Config files
+.github/
+.changeset/
+.bmad-core/
+.claude/
+
+# Development files
+*.spec.ts
+*.test.ts
+tsconfig.json
+jest.config.js
+biome.json
+typedoc.json
+
+# Documentation
+*.md
+!README.md
+!LICENSE
+
+# Misc
+coverage/
+.nyc_output/
+node_modules/
+.git/
+.gitignore
+.DS_Store
+*.log
+*.tgz
