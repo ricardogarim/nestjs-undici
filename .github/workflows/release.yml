@@ -1,17 +1,9 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_type:
-        description: 'Release type (patch, minor, major)'
-        required: true
-        default: 'patch'
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+  push:
+    branches:
+      - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -47,56 +39,15 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Check for changesets
-        id: changesets_check
-        run: |
-          if [ -n "$(ls -A .changeset/*.md 2>/dev/null)" ]; then
-            echo "has_changesets=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_changesets=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Version packages
-        if: steps.changesets_check.outputs.has_changesets == 'true'
-        id: version
-        run: |
-          npx changeset version
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          git add .
-          git commit -m "chore: release v$VERSION" || echo "No changes to commit"
-
-      - name: Push changes
-        if: steps.changesets_check.outputs.has_changesets == 'true'
-        run: |
-          git push origin main
-          git push origin main --tags
-
-      - name: Publish to NPM
-        if: steps.changesets_check.outputs.has_changesets == 'true'
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create GitHub Release
-        if: steps.changesets_check.outputs.has_changesets == 'true'
-        uses: actions/create-release@v1
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm publish --access public
+          version: npx changeset version
+          commit: "chore: release package"
+          title: "chore: release package"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.version.outputs.version }}
-          release_name: Release v${{ steps.version.outputs.version }}
-          body: |
-            See [CHANGELOG.md](https://github.com/ricardogarim/nestjs-undici/blob/main/CHANGELOG.md) for details.
-          draft: false
-          prerelease: false
-
-      - name: Publish NPM notification
-        if: steps.changesets_check.outputs.has_changesets == 'true'
-        run: |
-          echo "🎉 Published version ${{ steps.version.outputs.version }} to NPM!"
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
