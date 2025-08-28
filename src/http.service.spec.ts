@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Agent } from 'undici';
 import { of, throwError } from 'rxjs';
 import { HttpService } from './http.service';
-import { HTTP_MODULE_OPTIONS } from './http.constants';
+import { HTTP_MODULE_OPTIONS } from './constants/http-module.constant';
 import { HttpModuleOptions } from './interfaces/http-module.interface';
 
 // Mock undici

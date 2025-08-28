@@ -2,7 +2,7 @@
 
 High-performance HTTP module for NestJS using Undici
 
-[![npm version](https://img.shields.io/npm/v/nestjs-undici.svg)](https://www.npmjs.com/package/nestjs-undici)
+[![npm version](https://img.shields.io/npm/v/@ricardogarim/nestjs-undici.svg)](https://www.npmjs.com/package/@ricardogarim/nestjs-undici)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://github.com/ricardogarim/nestjs-undici/actions/workflows/ci.yml/badge.svg)](https://github.com/ricardogarim/nestjs-undici/actions)
 [![Coverage Status](https://coveralls.io/repos/github/ricardogarim/nestjs-undici/badge.svg?branch=main)](https://coveralls.io/github/ricardogarim/nestjs-undici?branch=main)

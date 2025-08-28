@@ -81,12 +81,14 @@ describe('HttpModule', () => {
       }
 
       const module = await Test.createTestingModule({
+        providers: [ConfigService],
         imports: [
           HttpModule.registerAsync({
             useExisting: ConfigService,
+            imports: [],
+            extraProviders: [ConfigService],
           }),
         ],
-        providers: [ConfigService],
       }).compile();
 
       const httpService = module.get<HttpService>(HttpService);
@@ -128,9 +130,9 @@ describe('HttpModule', () => {
               timeout: 8000,
             }),
             inject: [ConfigService],
+            extraProviders: [ConfigService],
           }),
         ],
-        providers: [ConfigService],
       }).compile();
 
       const httpService = module.get<HttpService>(HttpService);
