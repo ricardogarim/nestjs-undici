@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+### Patch Changes
+
+- bdb05f9: Fixed automated release workflow using changesets for version management
+
 ## 1.0.1
 
 ### Patch Changes
