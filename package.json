@@ -1,0 +1,65 @@
+{
+  "name": "@ricardogarim/nestjs-undici",
+  "version": "1.0.0",
+  "description": "NestJS HTTP module using Undici - a fast and reliable HTTP/1.1 client",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "lint": "biome check --write ./src",
+    "lint:check": "biome check ./src",
+    "format": "biome format --write ./src",
+    "format:check": "biome format ./src",
+    "check": "biome check --apply ./src",
+    "docs": "typedoc",
+    "benchmark": "node benchmarks/performance.js"
+  },
+  "keywords": [
+    "nestjs",
+    "undici",
+    "http",
+    "client",
+    "http-client",
+    "request",
+    "axios-alternative",
+    "performance",
+    "microservices"
+  ],
+  "author": "Ricardo Garim <ricardo@garim.com.br>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ricardogarim/nestjs-undici.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ricardogarim/nestjs-undici/issues"
+  },
+  "homepage": "https://github.com/ricardogarim/nestjs-undici#readme",
+  "peerDependencies": {
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6"
+  },
+  "dependencies": {
+    "rxjs": "^7.8.2",
+    "undici": "^7.15.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.2",
+    "@nestjs/testing": "^11.1.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
+    "jest": "^30.1.1",
+    "rimraf": "^6.0.1",
+    "ts-jest": "^29.4.1",
+    "typedoc": "^0.28.11",
+    "typescript": "^5.9.2"
+  }
+}

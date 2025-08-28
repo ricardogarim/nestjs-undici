@@ -1,0 +1,27 @@
+# CODEOWNERS for NestJS-Undici
+# All changes require review from @ricardogarim
+
+# Default owner for everything
+* @ricardogarim
+
+# Source code
+/src/ @ricardogarim
+
+# Tests
+/test/ @ricardogarim
+*.spec.ts @ricardogarim
+*.test.ts @ricardogarim
+
+# Documentation
+/*.md @ricardogarim
+/docs/ @ricardogarim
+
+# Configuration
+/*.json @ricardogarim
+/*.js @ricardogarim
+/*.ts @ricardogarim
+/.github/ @ricardogarim
+
+# Examples and benchmarks
+/examples/ @ricardogarim
+/benchmarks/ @ricardogarim

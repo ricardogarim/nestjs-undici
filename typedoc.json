@@ -1,0 +1,19 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs/api",
+  "exclude": ["**/*.spec.ts", "**/test/**", "**/examples/**"],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "includeVersion": true,
+  "readme": "README.md",
+  "name": "NestJS-Undici API Documentation",
+  "theme": "default",
+  "hideGenerator": true,
+  "navigationLinks": {
+    "GitHub": "https://github.com/ricardogarim/nestjs-undici",
+    "NPM": "https://www.npmjs.com/package/@ricardogarim/nestjs-undici"
+  },
+  "plugin": [],
+  "categorizeByGroup": true,
+  "gitRevision": "main"
+}
