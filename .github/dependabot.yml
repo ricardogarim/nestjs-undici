@@ -1,0 +1,55 @@
+version: 2
+updates:
+  # NPM dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    groups:
+      dev-dependencies:
+        patterns:
+          - "@types/*"
+          - "@nestjs/testing"
+          - "jest*"
+          - "ts-jest"
+          - "typescript"
+          - "rimraf"
+          - "@biomejs/biome"
+          - "typedoc"
+        update-types:
+          - "minor"
+          - "patch"
+      production:
+        patterns:
+          - "rxjs"
+          - "undici"
+        update-types:
+          - "minor"
+          - "patch"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "automated"
+    reviewers:
+      - "ricardogarim"
+    
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "ci"
+      - "automated"
+    reviewers:
+      - "ricardogarim"

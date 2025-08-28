@@ -1,0 +1,78 @@
+# Repository settings
+# This can be applied using the GitHub Settings Probot app
+# https://github.com/apps/settings
+
+repository:
+  name: nestjs-undici
+  description: High-performance HTTP module for NestJS using Undici
+  homepage: https://www.npmjs.com/package/@ricardogarim/nestjs-undici
+  topics:
+    - nestjs
+    - undici
+    - http-client
+    - typescript
+    - nodejs
+    - microservices
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+  has_downloads: true
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: true
+  allow_rebase_merge: true
+  allow_auto_merge: true
+  delete_branch_on_merge: true
+  enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
+
+# Labels
+labels:
+  - name: bug
+    color: d73a4a
+    description: Something isn't working
+  - name: enhancement
+    color: a2eeef
+    description: New feature or request
+  - name: documentation
+    color: 0075ca
+    description: Improvements or additions to documentation
+  - name: dependencies
+    color: 0366d6
+    description: Pull requests that update dependencies
+  - name: ci
+    color: black
+    description: Continuous Integration
+  - name: automated
+    color: gray
+    description: Automated PR from bots
+  - name: breaking
+    color: red
+    description: Breaking change
+  - name: security
+    color: orange
+    description: Security issue or fix
+  - name: performance
+    color: yellow
+    description: Performance improvement
+  - name: help wanted
+    color: 008672
+    description: Extra attention is needed
+  - name: good first issue
+    color: 7057ff
+    description: Good for newcomers
+
+# Milestones
+milestones:
+  - title: v1.0.0
+    description: Initial stable release
+    state: open
+  - title: v1.1.0
+    description: Feature enhancements
+    state: open
+
+# Collaborators
+collaborators:
+  - username: ricardogarim
+    permission: admin
