@@ -6,7 +6,48 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
+  # Validate PR has changeset
+  changesets:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Check for changeset
+        id: changeset
+        run: |
+          npx changeset status --since=origin/main || echo "missing=true" >> $GITHUB_OUTPUT
+      
+      - name: Comment on PR
+        if: steps.changeset.outputs.missing == 'true'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: changeset
+          message: |
+            ⚠️ **Missing Changeset**
+            
+            This PR requires a changeset. Please run:
+            ```bash
+            npx changeset
+            ```
+            Then commit and push the generated file.
+
   test:
     runs-on: ubuntu-latest
     
