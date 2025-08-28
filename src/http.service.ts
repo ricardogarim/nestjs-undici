@@ -1,16 +1,13 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { from, type Observable, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { Agent, request } from "undici";
-import {
-  HTTP_MODULE_OPTIONS,
-  HTTP_DEFAULTS,
-} from "./constants/http-module.constant";
+import { Inject, Injectable } from '@nestjs/common';
+import { from, type Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Agent, request } from 'undici';
+import { HTTP_DEFAULTS, HTTP_MODULE_OPTIONS } from './constants/http-module.constant';
 import type {
   HttpModuleOptions,
   RequestInterceptor,
   ResponseInterceptor,
-} from "./interfaces/http-module.interface";
+} from './interfaces/http-module.interface';
 
 export interface HttpResponse<T = any> {
   data: T;
@@ -21,12 +18,12 @@ export interface HttpResponse<T = any> {
 
 export interface RequestConfig {
   url?: string;
-  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
   headers?: Record<string, string>;
   params?: Record<string, any>;
   data?: any;
   timeout?: number;
-  responseType?: "json" | "text" | "stream" | "arraybuffer";
+  responseType?: 'json' | 'text' | 'stream' | 'arraybuffer';
 }
 
 @Injectable()
@@ -37,7 +34,7 @@ export class HttpService {
 
   constructor(
     @Inject(HTTP_MODULE_OPTIONS)
-    private readonly options: HttpModuleOptions = {}
+    private readonly options: HttpModuleOptions = {},
   ) {
     this.agent = this.createAgent();
     this.initializeInterceptors();
@@ -49,17 +46,13 @@ export class HttpService {
     return new Agent({
       connections: this.options.connections || HTTP_DEFAULTS.CONNECTION_COUNT,
       pipelining: this.options.pipelining || HTTP_DEFAULTS.PIPELINING_LIMIT,
-      keepAliveTimeout:
-        this.options.keepAliveTimeout || HTTP_DEFAULTS.KEEP_ALIVE_TIMEOUT,
-      keepAliveMaxTimeout:
-        this.options.keepAliveMaxTimeout ||
-        HTTP_DEFAULTS.KEEP_ALIVE_MAX_TIMEOUT,
+      keepAliveTimeout: this.options.keepAliveTimeout || HTTP_DEFAULTS.KEEP_ALIVE_TIMEOUT,
+      keepAliveMaxTimeout: this.options.keepAliveMaxTimeout || HTTP_DEFAULTS.KEEP_ALIVE_MAX_TIMEOUT,
       connect: {
         timeout: this.options.connectTimeout || HTTP_DEFAULTS.CONNECT_TIMEOUT,
       },
       bodyTimeout: this.options.bodyTimeout || HTTP_DEFAULTS.BODY_TIMEOUT,
-      headersTimeout:
-        this.options.headersTimeout || HTTP_DEFAULTS.HEADERS_TIMEOUT,
+      headersTimeout: this.options.headersTimeout || HTTP_DEFAULTS.HEADERS_TIMEOUT,
     });
   }
 
@@ -71,71 +64,62 @@ export class HttpService {
   }
 
   request<T = any>(config: RequestConfig): Observable<HttpResponse<T>> {
-    return from(this.executeRequest<T>(config)).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return from(this.executeRequest<T>(config)).pipe(catchError(error => throwError(() => error)));
   }
 
   get<T = any>(
     url: string,
-    config?: Omit<RequestConfig, "url" | "method">
+    config?: Omit<RequestConfig, 'url' | 'method'>,
   ): Observable<HttpResponse<T>> {
-    return this.request<T>({ ...config, url, method: "GET" });
+    return this.request<T>({ ...config, url, method: 'GET' });
   }
 
   post<T = any>(
     url: string,
     data?: any,
-    config?: Omit<RequestConfig, "url" | "method" | "data">
+    config?: Omit<RequestConfig, 'url' | 'method' | 'data'>,
   ): Observable<HttpResponse<T>> {
-    return this.request<T>({ ...config, url, method: "POST", data });
+    return this.request<T>({ ...config, url, method: 'POST', data });
   }
 
   put<T = any>(
     url: string,
     data?: any,
-    config?: Omit<RequestConfig, "url" | "method" | "data">
+    config?: Omit<RequestConfig, 'url' | 'method' | 'data'>,
   ): Observable<HttpResponse<T>> {
-    return this.request<T>({ ...config, url, method: "PUT", data });
+    return this.request<T>({ ...config, url, method: 'PUT', data });
   }
 
   delete<T = any>(
     url: string,
-    config?: Omit<RequestConfig, "url" | "method">
+    config?: Omit<RequestConfig, 'url' | 'method'>,
   ): Observable<HttpResponse<T>> {
-    return this.request<T>({ ...config, url, method: "DELETE" });
+    return this.request<T>({ ...config, url, method: 'DELETE' });
   }
 
   patch<T = any>(
     url: string,
     data?: any,
-    config?: Omit<RequestConfig, "url" | "method" | "data">
+    config?: Omit<RequestConfig, 'url' | 'method' | 'data'>,
   ): Observable<HttpResponse<T>> {
-    return this.request<T>({ ...config, url, method: "PATCH", data });
+    return this.request<T>({ ...config, url, method: 'PATCH', data });
   }
 
   head<T = any>(
     url: string,
-    config?: Omit<RequestConfig, "url" | "method">
+    config?: Omit<RequestConfig, 'url' | 'method'>,
   ): Observable<HttpResponse<T>> {
-    return this.request<T>({ ...config, url, method: "HEAD" });
+    return this.request<T>({ ...config, url, method: 'HEAD' });
   }
 
-  private async executeRequest<T>(
-    config: RequestConfig
-  ): Promise<HttpResponse<T>> {
+  private async executeRequest<T>(config: RequestConfig): Promise<HttpResponse<T>> {
     const finalConfig = await this.applyRequestInterceptors(config);
     const url = this.buildUrl(finalConfig);
     const headers = this.mergeHeaders(finalConfig);
     const body = this.prepareRequestBody(finalConfig, headers);
 
     try {
-      const response = await this.performRequest(
-        url,
-        finalConfig,
-        headers,
-        body
-      );
+      const response = await this.performRequest(url, finalConfig, headers, body);
       const data = await this.parseResponseData(response, finalConfig);
       const httpResponse = this.createHttpResponse<T>(response, data);
       return await this.applyResponseInterceptors(httpResponse);
@@ -145,9 +129,7 @@ export class HttpService {
     }
   }
 
-  private async applyRequestInterceptors(
-    config: RequestConfig
-  ): Promise<RequestConfig> {
+  private async applyRequestInterceptors(config: RequestConfig): Promise<RequestConfig> {
     let finalConfig = config;
     for (const interceptor of this.requestInterceptors) {
       if (!interceptor.onRequest) continue;
@@ -165,7 +147,7 @@ export class HttpService {
   }
 
   private buildUrl(config: RequestConfig): string {
-    const baseUrl = config.url || "";
+    const baseUrl = config.url || '';
     const urlWithBase = this.shouldPrependBaseUrl(baseUrl)
       ? `${this.options.baseURL}${baseUrl}`
       : baseUrl;
@@ -174,14 +156,14 @@ export class HttpService {
   }
 
   private shouldPrependBaseUrl(url: string): boolean {
-    return Boolean(this.options.baseURL && !url.startsWith("http"));
+    return Boolean(this.options.baseURL && !url.startsWith('http'));
   }
 
   private appendQueryParams(url: string, params?: Record<string, any>): string {
     if (!params) return url;
 
     const queryString = new URLSearchParams(params).toString();
-    const separator = url.includes("?") ? "&" : "?";
+    const separator = url.includes('?') ? '&' : '?';
     return `${url}${separator}${queryString}`;
   }
 
@@ -192,16 +174,12 @@ export class HttpService {
     };
   }
 
-  private prepareRequestBody(
-    config: RequestConfig,
-    headers: Record<string, string>
-  ): any {
+  private prepareRequestBody(config: RequestConfig, headers: Record<string, string>): any {
     if (!config.data) return undefined;
 
     const shouldStringify = this.isJsonSerializable(config.data);
     if (shouldStringify) {
-      headers["Content-Type"] =
-        headers["Content-Type"] || HTTP_DEFAULTS.DEFAULT_CONTENT_TYPE;
+      headers['Content-Type'] = headers['Content-Type'] || HTTP_DEFAULTS.DEFAULT_CONTENT_TYPE;
       return JSON.stringify(config.data);
     }
 
@@ -209,14 +187,14 @@ export class HttpService {
   }
 
   private isJsonSerializable(data: any): boolean {
-    return typeof data === "object" && !(data instanceof FormData);
+    return typeof data === 'object' && !(data instanceof FormData);
   }
 
   private async performRequest(
     url: string,
     config: RequestConfig,
     headers: Record<string, string>,
-    body: any
+    body: any,
   ) {
     return await request(url, {
       method: config.method || HTTP_DEFAULTS.DEFAULT_METHOD,
@@ -227,12 +205,8 @@ export class HttpService {
     });
   }
 
-  private async parseResponseData(
-    response: any,
-    config: RequestConfig
-  ): Promise<any> {
-    const responseType =
-      config.responseType || HTTP_DEFAULTS.DEFAULT_RESPONSE_TYPE;
+  private async parseResponseData(response: any, config: RequestConfig): Promise<any> {
+    const responseType = config.responseType || HTTP_DEFAULTS.DEFAULT_RESPONSE_TYPE;
 
     const parsers = {
       json: () => response.body.json(),
@@ -241,8 +215,7 @@ export class HttpService {
       stream: () => response.body,
     };
 
-    const parser =
-      parsers[responseType] || parsers[HTTP_DEFAULTS.DEFAULT_RESPONSE_TYPE];
+    const parser = parsers[responseType] || parsers[HTTP_DEFAULTS.DEFAULT_RESPONSE_TYPE];
     return await parser();
   }
 
@@ -261,9 +234,7 @@ export class HttpService {
       : HTTP_DEFAULTS.ERROR_STATUS_TEXT;
   }
 
-  private async applyResponseInterceptors<T>(
-    response: HttpResponse<T>
-  ): Promise<HttpResponse<T>> {
+  private async applyResponseInterceptors<T>(response: HttpResponse<T>): Promise<HttpResponse<T>> {
     let finalResponse = response;
 
     for (const interceptor of this.responseInterceptors) {

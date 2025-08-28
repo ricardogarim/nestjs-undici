@@ -1,20 +1,12 @@
-import {
-  type DynamicModule,
-  Global,
-  Module,
-  type Provider,
-} from "@nestjs/common";
-import { randomStringGenerator } from "@nestjs/common/utils/random-string-generator.util";
-import {
-  HTTP_MODULE_ID,
-  HTTP_MODULE_OPTIONS,
-} from "./constants/http-module.constant";
-import { HttpService } from "./http.service";
+import { type DynamicModule, Module, type Provider } from '@nestjs/common';
+import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
+import { HTTP_MODULE_ID, HTTP_MODULE_OPTIONS } from './constants/http-module.constant';
+import { HttpService } from './http.service';
 import type {
   HttpModuleAsyncOptions,
   HttpModuleOptions,
   HttpModuleOptionsFactory,
-} from "./interfaces/http-module.interface";
+} from './interfaces/http-module.interface';
 
 @Module({})
 export class HttpModule {
@@ -79,9 +71,7 @@ export class HttpModule {
     return dynamicModule;
   }
 
-  private static createAsyncProviders(
-    options: HttpModuleAsyncOptions
-  ): Provider[] {
+  private static createAsyncProviders(options: HttpModuleAsyncOptions): Provider[] {
     const optionsProvider = HttpModule.createAsyncOptionsProvider(options);
 
     if (HttpModule.shouldUseOptionsProviderOnly(options)) {
@@ -96,15 +86,11 @@ export class HttpModule {
     return [optionsProvider, classProvider];
   }
 
-  private static shouldUseOptionsProviderOnly(
-    options: HttpModuleAsyncOptions
-  ): boolean {
+  private static shouldUseOptionsProviderOnly(options: HttpModuleAsyncOptions): boolean {
     return Boolean(options.useExisting || options.useFactory);
   }
 
-  private static createAsyncOptionsProvider(
-    options: HttpModuleAsyncOptions
-  ): Provider {
+  private static createAsyncOptionsProvider(options: HttpModuleAsyncOptions): Provider {
     if (options.useFactory) {
       return HttpModule.createFactoryProvider(options);
     }
@@ -112,9 +98,7 @@ export class HttpModule {
     return HttpModule.createClassProvider(options);
   }
 
-  private static createFactoryProvider(
-    options: HttpModuleAsyncOptions
-  ): Provider {
+  private static createFactoryProvider(options: HttpModuleAsyncOptions): Provider {
     return {
       provide: HTTP_MODULE_OPTIONS,
       useFactory: options.useFactory!,
@@ -122,9 +106,7 @@ export class HttpModule {
     };
   }
 
-  private static createClassProvider(
-    options: HttpModuleAsyncOptions
-  ): Provider {
+  private static createClassProvider(options: HttpModuleAsyncOptions): Provider {
     return {
       provide: HTTP_MODULE_OPTIONS,
       useFactory: async (optionsFactory: HttpModuleOptionsFactory) =>

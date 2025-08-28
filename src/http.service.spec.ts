@@ -1,9 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { Agent } from 'undici';
-import { of, throwError } from 'rxjs';
-import { HttpService } from './http.service';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { HTTP_MODULE_OPTIONS } from './constants/http-module.constant';
-import { HttpModuleOptions } from './interfaces/http-module.interface';
+import { HttpService } from './http.service';
+import type { HttpModuleOptions } from './interfaces/http-module.interface';
 
 // Mock undici
 jest.mock('undici', () => ({
@@ -20,7 +18,7 @@ describe('HttpService', () => {
 
   beforeEach(async () => {
     mockRequest = require('undici').request as jest.Mock;
-    
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HttpService,
@@ -62,7 +60,7 @@ describe('HttpService', () => {
         'https://api.test.com/users/1',
         expect.objectContaining({
           method: 'GET',
-        })
+        }),
       );
     });
 
@@ -77,13 +75,15 @@ describe('HttpService', () => {
 
       mockRequest.mockResolvedValue(mockResponse);
 
-      await service.get('/users', { 
-        params: { page: 1, limit: 10 } 
-      }).toPromise();
+      await service
+        .get('/users', {
+          params: { page: 1, limit: 10 },
+        })
+        .toPromise();
 
       expect(mockRequest).toHaveBeenCalledWith(
         'https://api.test.com/users?page=1&limit=10',
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
@@ -91,9 +91,7 @@ describe('HttpService', () => {
       const error = new Error('Network error');
       mockRequest.mockRejectedValue(error);
 
-      await expect(
-        service.get('/users').toPromise()
-      ).rejects.toThrow('Network error');
+      await expect(service.get('/users').toPromise()).rejects.toThrow('Network error');
     });
   });
 
@@ -122,7 +120,7 @@ describe('HttpService', () => {
           headers: expect.objectContaining({
             'Content-Type': 'application/json',
           }),
-        })
+        }),
       );
     });
 
@@ -147,7 +145,7 @@ describe('HttpService', () => {
         expect.objectContaining({
           method: 'POST',
           body: formData,
-        })
+        }),
       );
     });
   });
@@ -173,7 +171,7 @@ describe('HttpService', () => {
         expect.objectContaining({
           method: 'PUT',
           body: JSON.stringify(updateData),
-        })
+        }),
       );
     });
   });
@@ -197,7 +195,7 @@ describe('HttpService', () => {
         'https://api.test.com/users/1',
         expect.objectContaining({
           method: 'DELETE',
-        })
+        }),
       );
     });
   });
@@ -222,7 +220,7 @@ describe('HttpService', () => {
         'https://api.test.com/users/1',
         expect.objectContaining({
           method: 'PATCH',
-        })
+        }),
       );
     });
   });
@@ -239,9 +237,11 @@ describe('HttpService', () => {
 
       mockRequest.mockResolvedValue(mockResponse);
 
-      const result = await service.get('/text', { 
-        responseType: 'text' 
-      }).toPromise();
+      const result = await service
+        .get('/text', {
+          responseType: 'text',
+        })
+        .toPromise();
 
       expect(result?.data).toBe('Plain text response');
     });
@@ -258,9 +258,11 @@ describe('HttpService', () => {
 
       mockRequest.mockResolvedValue(mockResponse);
 
-      const result = await service.get('/binary', { 
-        responseType: 'arraybuffer' 
-      }).toPromise();
+      const result = await service
+        .get('/binary', {
+          responseType: 'arraybuffer',
+        })
+        .toPromise();
 
       expect(result?.data).toBe(buffer);
     });
@@ -275,9 +277,11 @@ describe('HttpService', () => {
 
       mockRequest.mockResolvedValue(mockResponse);
 
-      const result = await service.get('/stream', { 
-        responseType: 'stream' 
-      }).toPromise();
+      const result = await service
+        .get('/stream', {
+          responseType: 'stream',
+        })
+        .toPromise();
 
       expect(result?.data).toBe(mockStream);
     });
@@ -286,7 +290,7 @@ describe('HttpService', () => {
   describe('Interceptors', () => {
     it('should apply request interceptors', async () => {
       const requestInterceptor = {
-        onRequest: jest.fn().mockImplementation((config) => ({
+        onRequest: jest.fn().mockImplementation(config => ({
           ...config,
           headers: { ...config.headers, 'X-Custom': 'Header' },
         })),
@@ -328,13 +332,13 @@ describe('HttpService', () => {
           headers: expect.objectContaining({
             'X-Custom': 'Header',
           }),
-        })
+        }),
       );
     });
 
     it('should apply response interceptors', async () => {
       const responseInterceptor = {
-        onResponse: jest.fn().mockImplementation((response) => ({
+        onResponse: jest.fn().mockImplementation(response => ({
           ...response,
           data: { ...response.data, intercepted: true },
         })),
