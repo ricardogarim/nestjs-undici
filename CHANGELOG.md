@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.1
+
+### Patch Changes
+
+- 1abdfd6: Fix CI pipeline by adding package-lock.json and enhancing GitHub Actions workflows
+
+  - Add package-lock.json to repository for dependency caching
+  - Remove package-lock.json from .gitignore
+  - Add changesets validation to PRs
+  - Enhanced CI with separate lint, test, build, and security jobs
+  - Add automated release workflow with changesets
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -8,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial release of NestJS-Undici HTTP module
 - Full HTTP methods support (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS)
 - Request and response interceptors
@@ -22,12 +35,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for Node.js 18.x, 20.x, and 22.x
 
 ### Security
+
 - HTTPS certificate validation
 - Secure defaults for all configurations
 
 ## [1.0.0] - TBD
 
 ### Added
+
 - First stable release
 - Production-ready features
 - Complete documentation
