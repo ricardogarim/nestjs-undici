@@ -84,31 +84,3 @@ jobs:
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
-
-  publish:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        registry-url: 'https://registry.npmjs.org'
-    
-    - run: npm ci
-    - run: npm run build
-    
-    - name: Check if version changed
-      id: version
-      uses: EndBug/version-check@v2
-      with:
-        diff-search: true
-    
-    - name: Publish to NPM
-      if: steps.version.outputs.changed == 'true'
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
